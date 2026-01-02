@@ -52,10 +52,7 @@ i=1
 print("What is 789 x 456")
 while i<=20:
     answer == input()
-    if answer == "359784"
-        print ("Correct!🎉")
-        break
-    elif i == 15:
-        print ("Oops! You have exhausted all the tries. The answer is 359784")
-        break
-    elif
+    if answer == "359784":
+        print("Correct! 🎉")
+        
+    
