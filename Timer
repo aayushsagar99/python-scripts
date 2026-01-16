@@ -1,0 +1,6 @@
+print ("hello world")
+a=12
+b=2
+c=a*b
+d=(int(input()))
+list ['mango']
