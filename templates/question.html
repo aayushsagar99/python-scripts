@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.question }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            transition: opacity 0.3s;
+        }
+        .back-link:hover {
+            opacity: 0.8;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .question {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .answer-section {
+            margin: 30px 0;
+        }
+        .answer-label {
+            color: #764ba2;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .answer {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+        }
+        .answer ul {
+            margin-left: 20px;
+            color: #333;
+        }
+        .answer li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        .example {
+            background: #f5f5f5;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/homework" class="back-link">← Back to All Questions</a>
+        <div class="card">
+            <div class="question">{{ data.question }}</div>
+            <div class="answer-section">
+                <div class="answer-label">Answer:</div>
+                {% if data.answer is string %}
+                    <div class="answer">{{ data.answer }}</div>
+                {% else %}
+                    <div class="answer">
+                        <ul>
+                        {% for item in data.answer %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+            {% if data.example is defined %}
+            <div class="answer-section">
+                <div class="answer-label">Example:</div>
+                <div class="example">{{ data.example }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

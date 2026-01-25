@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubik's Cube Timer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 1em;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover {
+            opacity: 0.7;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 4em;
+            font-weight: bold;
+            text-align: center;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-display.ready {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation: pulse 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 15px 25px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-start.stopped {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-undo {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-undo:hover {
+            background: #ffb300;
+            transform: translateY(-2px);
+        }
+
+        .btn-undo:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-dnf {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-dnf:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .stats-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .stats-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .times-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .times-list h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .time-item {
+            background: white;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            border-left: 3px solid #667eea;
+        }
+
+        .time-number {
+            color: #999;
+            font-weight: 600;
+        }
+
+        .time-value {
+            color: #667eea;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 600px) {
+            .timer-display {
+                font-size: 3em;
+                padding: 30px 20px;
+            }
+
+            .container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Home</a>
+        <div class="header">
+            <h1>🎲 Rubik's Cube Timer</h1>
+            <p>Track your solve times and statistics</p>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <div class="timer-display" id="timerDisplay">0.00</div>
+
+        <div class="controls">
+            <button class="btn-start" id="startBtn">START TIMER</button>
+            <button class="btn-undo" id="undoBtn" disabled>↶ Undo</button>
+            <button class="btn-dnf" id="dnfBtn">DNF</button>
+        </div>
+
+        <div class="stats-section">
+            <h3>📊 Statistics</h3>
+            <div class="stat-row">
+                <span class="stat-label">Last Time:</span>
+                <span class="stat-value" id="lastTime">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Best Time:</span>
+                <span class="stat-value" id="bestTime">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Worst Time:</span>
+                <span class="stat-value" id="worstTime">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Ao5:</span>
+                <span class="stat-value" id="ao5">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Ao12:</span>
+                <span class="stat-value" id="ao12">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Total Solves:</span>
+                <span class="stat-value" id="totalSolves">0</span>
+            </div>
+        </div>
+
+        <div class="times-list">
+            <h4>Recent Times</h4>
+            <div id="timesList"></div>
+        </div>
+    </div>
+
+    <script>
+        let timerRunning = false;
+        let timerStartTime = 0;
+        let timerInterval = null;
+        let timerReady = false;
+
+        const timerDisplay = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const undoBtn = document.getElementById('undoBtn');
+        const dnfBtn = document.getElementById('dnfBtn');
+        const message = document.getElementById('message');
+
+        // Update stats on page load
+        updateStats();
+
+        startBtn.addEventListener('click', () => {
+            if (!timerRunning) {
+                timerReady = true;
+                timerDisplay.classList.add('ready');
+                startBtn.textContent = 'RELEASE TO START';
+                
+                setTimeout(() => {
+                    if (timerReady) {
+                        startTimer();
+                    }
+                }, 500);
+            } else {
+                stopTimer();
+            }
+        });
+
+        undoBtn.addEventListener('click', () => {
+            fetch('/api/undo', { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(`Removed: ${data.removed}`, 'info');
+                        updateStats();
+                    }
+                });
+        });
+
+        dnfBtn.addEventListener('click', () => {
+            if (timerRunning) {
+                stopTimer();
+            }
+            fetch('/api/save-time', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ time: null })
+            }).then(() => {
+                showMessage('Marked as DNF', 'info');
+                updateStats();
+                resetTimer();
+            });
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (!timerRunning) {
+                    startBtn.click();
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (timerReady && !timerRunning) {
+                    timerReady = false;
+                    timerDisplay.classList.remove('ready');
+                    startBtn.textContent = 'STOP TIMER';
+                }
+            }
+        });
+
+        function startTimer() {
+            timerRunning = true;
+            timerStartTime = Date.now();
+            timerReady = false;
+            timerDisplay.classList.remove('ready');
+            startBtn.textContent = 'STOP TIMER';
+            startBtn.classList.add('stopped');
+
+            timerInterval = setInterval(() => {
+                const elapsed = (Date.now() - timerStartTime) / 1000;
+                updateDisplay(elapsed);
+            }, 10);
+        }
+
+        function stopTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            const elapsed = (Date.now() - timerStartTime) / 1000;
+            
+            fetch('/api/save-time', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ time: elapsed })
+            }).then(() => {
+                showMessage(`Saved: ${formatTime(elapsed)}`, 'success');
+                updateStats();
+                resetTimer();
+            });
+        }
+
+        function resetTimer() {
+            timerDisplay.textContent = '0.00';
+            startBtn.textContent = 'START TIMER';
+            startBtn.classList.remove('stopped');
+        }
+
+        function updateDisplay(seconds) {
+            timerDisplay.textContent = formatTime(seconds);
+        }
+
+        function formatTime(seconds) {
+            if (seconds >= 60) {
+                const m = Math.floor(seconds / 60);
+                const s = seconds - m * 60;
+                return `${m}:${s.toFixed(2).padStart(5, '0')}`;
+            }
+            return seconds.toFixed(2);
+        }
+
+        function updateStats() {
+            fetch('/api/stats')
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('lastTime').textContent = data.last || '-';
+                    document.getElementById('bestTime').textContent = data.best || '-';
+                    document.getElementById('worstTime').textContent = data.worst || '-';
+                    document.getElementById('ao5').textContent = data.ao5 || '-';
+                    document.getElementById('ao12').textContent = data.ao12 || '-';
+                    document.getElementById('totalSolves').textContent = data.total;
+                    
+                    undoBtn.disabled = data.total === 0;
+
+                    const timesList = document.getElementById('timesList');
+                    timesList.innerHTML = data.times.length ? 
+                        data.times.reverse().map((t, i) => 
+                            `<div class="time-item">
+                                <span class="time-number">#${data.total - i}</span>
+                                <span class="time-value">${t}</span>
+                            </div>`
+                        ).join('') : 
+                        '<p style="text-align: center; color: #999;">No times recorded yet</p>';
+                });
+        }
+
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = `message show ${type}`;
+            setTimeout(() => message.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

@@ -16,6 +16,3 @@ print ('   \   /         \   /   ')
 
 
 
-Sports = ['soccer', 'basketball', 'cricket']
-Sports.remove()
-print (Sports)

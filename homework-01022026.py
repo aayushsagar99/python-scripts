@@ -122,14 +122,16 @@ print("\n")
 print("Q2: What is 'remove()' in 'list'? Give an example.")
 print("Answer: \n")
 
-print("tgcickkkllljhigyftodvfotk bv gvyft vcurtfrdcfvgbhunlij")
+print(2,1)
+print("Example 1\n")
+
 
 print("Q3: What is 'reverse()' in list? Give an example")
 print("Answer: \\n")
 
 
 
-print(,1)
+print(3,1)
 print("Example 1:\n")
 
 print()
