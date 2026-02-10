@@ -5,7 +5,7 @@ import os
 import time
 from statistics import mean
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 TIMES_FILE = os.path.expanduser("~/.cubetimer_times.json")
 
@@ -111,6 +111,11 @@ def homework_question(q_id):
     if q_id in homework_data:
         return render_template('question.html', q_id=q_id, data=homework_data[q_id])
     return "Question not found", 404
+
+# serve favicon at root /favicon.ico so browsers get it even if they request default path
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.svg')
 
 # ============ TIMER API ============
 @app.route('/api/stats')

@@ -1,0 +1,14 @@
+*{box-sizing:border-box;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif}
+body{background:#f3f4f6;color:#111;margin:0;display:flex;align-items:center;justify-content:center;height:100vh}
+.atm{width:360px}
+.card{background:#fff;padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.06);margin-bottom:12px}
+.hidden{display:none}
+input{width:100%;padding:10px;margin-top:8px;margin-bottom:8px;border:1px solid #ddd;border-radius:6px}
+button{padding:10px 12px;border-radius:6px;border:0;background:#2563eb;color:#fff;cursor:pointer;margin-right:8px}
+button[disabled]{opacity:.6;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.msg{color:#b91c1c;margin-top:6px}
+.foot{font-size:12px;color:#6b7280;text-align:center}
+#actionArea{margin-top:12px}
+.amount-btn{background:#0ea5a4}
+.small{padding:6px 8px;font-size:14px}

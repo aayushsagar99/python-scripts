@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ATM - Web</title>
+  <link rel="icon" type="image/svg+xml" href="../static/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="atm">
+    <h1>ATM</h1>
+
+    <div id="login" class="card">
+      <label for="pin">Enter 4-digit PIN</label>
+      <input id="pin" type="password" maxlength="4" inputmode="numeric" pattern="[0-9]*" />
+      <button id="loginBtn">Enter</button>
+      <div id="pinMsg" class="msg"></div>
+    </div>
+
+    <div id="menu" class="card hidden">
+      <div class="row">
+        <button data-action="balance">Check Balance</button>
+        <button data-action="withdraw">Withdraw</button>
+        <button data-action="deposit">Deposit</button>
+        <button data-action="exit">Return Card</button>
+      </div>
+
+      <div id="actionArea"></div>
+
+      <div class="row">
+        <button id="logout">Logout</button>
+      </div>
+    </div>
+
+    <footer class="foot">Open this folder in Chrome or run a local server and visit <a id="serverLink" href="#">/atm_web/</a></footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
